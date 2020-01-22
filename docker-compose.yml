@@ -1,0 +1,48 @@
+version: '3'
+services:
+    postgres:
+        image: postgres:latest
+    redis:
+        image: redis:latest
+    nginx:
+        restart: always
+        build:
+            context: ./nginx
+            dockerfile: Dockerfile.dev
+        depends_on:
+            - fibonacci-server
+            - fibonacci-client
+        ports:
+            - '8000:80'
+    fibonacci-server:
+        image: fibonacci-server:latest
+        build:
+            context: ./server
+            dockerfile: Dockerfile.dev
+        volumes:
+            - /app/node_modules
+        environment:
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
+            - PGUSER=postgres
+            - PGPASSWORD=postgres_password
+            - PGHOST=postgres
+            - PGPORT=5432
+            - PGDATABASE=postgres
+    fibonacci-client:
+        image: fibonacci-client:latest
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile.dev
+        volumes:
+            - /app/node_modules
+    fibonacci-worker:
+        image: fibonacci-worker:latest
+        build:
+            context: ./worker
+            dockerfile: Dockerfile.dev
+        volumes:
+            - /app/node_modules
+        environment:
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
