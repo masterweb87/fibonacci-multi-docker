@@ -10,14 +10,14 @@ script:
     - docker run -e CI=true fibonacci-frontend-test npm run test -- --coverage
 
 after_success:
-    - docker build -t fibonacci-frontend ./frontend
-    - docker build -t fibonacci-nginx ./nginx
-    - docker build -t fibonacci-server ./server
-    - docker build -t fibonacci-worker ./worker
+    - docker build -t masterweb87/fibonacci-frontend ./frontend
+    - docker build -t masterweb87/fibonacci-nginx ./nginx
+    - docker build -t masterweb87/fibonacci-server ./server
+    - docker build -t masterweb87/fibonacci-worker ./worker
     # Login to Docker CLI
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
     # Push the images to Docker Hub
-    - docker push fibonacci-frontend
-    - docker push fibonacci-nginx
-    - docker push fibonacci-server
-    - docker push fibonacci-worker
+    - docker push masterweb87/fibonacci-frontend
+    - docker push masterweb87/fibonacci-nginx
+    - docker push masterweb87/fibonacci-server
+    - docker push masterweb87/fibonacci-worker
