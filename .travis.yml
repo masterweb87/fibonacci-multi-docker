@@ -21,3 +21,16 @@ after_success:
     - docker push masterweb87/fibonacci-nginx
     - docker push masterweb87/fibonacci-server
     - docker push masterweb87/fibonacci-worker
+    
+deploy:
+    edge: true 
+    provider: elasticbeanstalk
+    region: "us-east-2"
+    app: "fibonacci-docker"
+    env: "FibonacciDocker-env"
+    bucket_name: "elasticbeanstalk-us-east-2-375702630848"
+    bucket_path: "fibonacci-multi-docker"
+    on:
+        branch: master
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
