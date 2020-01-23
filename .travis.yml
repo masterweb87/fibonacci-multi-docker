@@ -1,0 +1,23 @@
+language: generic
+sudo: required
+services:
+    - docker
+  
+before_install:
+    - docker build -t fibonacci-frontend-test -f ./frontend/Dockerfile.dev ./frontend
+  
+script:
+    - docker run -e CI=true fibonacci-frontend-test npm run test -- --coverage
+
+after_success:
+    - docker build -t fibonacci-frontend ./frontend
+    - docker build -t fibonacci-nginx ./nginx
+    - docker build -t fibonacci-server ./server
+    - docker build -t fibonacci-worker ./worker
+    # Login to Docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    # Push the images to Docker Hub
+    - docker push fibonacci-frontend
+    - docker push fibonacci-nginx
+    - docker push fibonacci-server
+    - docker push fibonacci-worker
